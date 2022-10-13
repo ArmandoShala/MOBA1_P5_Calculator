@@ -18,15 +18,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private var placeholderNumber: Boolean = true
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         display = findViewById(R.id.display)
 
-        val buttons = arrayOf(
-            findViewById<Button>(R.id.number_0),
+        arrayOf<Button>(
+            findViewById(R.id.number_0),
             findViewById(R.id.number_01),
             findViewById(R.id.number_02),
             findViewById(R.id.number_03),
@@ -41,81 +40,31 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             findViewById(R.id.minus),
             findViewById(R.id.clear),
             findViewById(R.id.plus),
-            findViewById(R.id.equals)
-        )
-
-        for (button in buttons) {
-            button.setOnClickListener(this)
-        }
-
+            findViewById(R.id.equals),
+        ).forEach { it.setOnClickListener(this) }
     }
 
     override fun onClick(v: View?) {
         if (v != null) {
             when (v.id) {
-                R.id.number_0 -> {
-                    addDigitToDisplay(0)
-                }
+                R.id.number_0 -> addDigitToDisplay("0")
+                R.id.number_01 -> addDigitToDisplay("1")
+                R.id.number_02 -> addDigitToDisplay("2")
+                R.id.number_03 -> addDigitToDisplay("3")
+                R.id.number_04 -> addDigitToDisplay("4")
+                R.id.number_05 -> addDigitToDisplay("5")
+                R.id.number_06 -> addDigitToDisplay("6")
+                R.id.number_07 -> addDigitToDisplay("7")
+                R.id.number_08 -> addDigitToDisplay("8")
+                R.id.number_09 -> addDigitToDisplay("9")
 
-                R.id.number_01 -> {
-                    addDigitToDisplay(1)
-                }
+                R.id.divide -> selectOperant("/")
+                R.id.multiply -> selectOperant("*")
+                R.id.minus -> selectOperant("-")
+                R.id.plus -> selectOperant("+")
 
-                R.id.number_02 -> {
-                    addDigitToDisplay(2)
-                }
-
-                R.id.number_03 -> {
-                    addDigitToDisplay(3)
-                }
-
-                R.id.number_04 -> {
-                    addDigitToDisplay(4)
-                }
-
-                R.id.number_05 -> {
-                    addDigitToDisplay(5)
-                }
-
-                R.id.number_06 -> {
-                    addDigitToDisplay(6)
-                }
-
-                R.id.number_07 -> {
-                    addDigitToDisplay(7)
-                }
-
-                R.id.number_08 -> {
-                    addDigitToDisplay(8)
-                }
-
-                R.id.number_09 -> {
-                    addDigitToDisplay(9)
-                }
-
-                R.id.divide -> {
-                    selectOperant("/")
-                }
-
-                R.id.multiply -> {
-                    selectOperant("*")
-                }
-
-                R.id.minus -> {
-                    selectOperant("-")
-                }
-
-                R.id.plus -> {
-                    selectOperant("+")
-                }
-
-                R.id.clear -> {
-                    reset()
-                }
-
-                R.id.equals -> {
-                    calculate()
-                }
+                R.id.clear -> reset()
+                R.id.equals -> calculate()
             }
         }
     }
@@ -135,9 +84,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         placeholderNumber = true
     }
 
-    private fun addDigitToDisplay(digit: Int) {
+    private fun addDigitToDisplay(digit: String) {
         if (placeholderNumber) {
-            display.text = digit.toString()
+            display.text = digit
             placeholderNumber = false
         } else {
             "${display.text}$digit".also { display.text = it }
@@ -146,35 +95,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun calculate() {
         setNumbers()
-        var calculation = 0.0
-
-        when (operator) {
-            "/" -> {
-                    calculation  = (firstNumber!!.toDouble() / secondNumber!!.toDouble())
-            }
-
-            "*" -> {
-                calculation = (firstNumber!!.toDouble() * secondNumber!!.toDouble())
-            }
-
-            "-" -> {
-                calculation = (firstNumber!!.toDouble() - secondNumber!!.toDouble())
-            }
-
-            "+" -> {
-                calculation = (firstNumber!!.toDouble() + secondNumber!!.toDouble())
-            }
+        val calculation = when (operator) {
+            "/" -> (firstNumber!!.toDouble() / secondNumber!!.toDouble())
+            "*" -> (firstNumber!!.toDouble() * secondNumber!!.toDouble())
+            "-" -> (firstNumber!!.toDouble() - secondNumber!!.toDouble())
+            "+" -> (firstNumber!!.toDouble() + secondNumber!!.toDouble())
+            else -> 0.0
         }
         display.text = decimalFormat.format(calculation)
-        setInitState()
+        reverteToInitState()
     }
-
 
     private fun clearDisplay() {
         display.text = "0"
     }
 
-    private fun setInitState() {
+    private fun reverteToInitState() {
         firstNumber = null
         secondNumber = null
         operator = ""
@@ -184,7 +120,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun reset() {
         clearDisplay()
-        setInitState()
+        reverteToInitState()
     }
 
 }
